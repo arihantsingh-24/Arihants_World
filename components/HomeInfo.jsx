@@ -35,7 +35,7 @@ const renderContent = {
     </div>
   ),
   2: (
-    <InfoBox text={"Always learning"} link={"/about"} btnText={"learn more"} />
+    <InfoBox text={"know me better and explore my skills that showcase my passion for tech and creativity."} link={"/about"} btnText={"learn more"} />
   ),
   3: (
     <InfoBox
