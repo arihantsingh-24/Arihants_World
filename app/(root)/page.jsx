@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import Loader from "../../components/Loader";
 import Island from "../../models/Island";
@@ -7,6 +7,26 @@ import Sky from "@/models/Sky";
 import Bird from "@/models/Bird";
 import Plane from "@/models/Plane";
 import HomeInfo from "@/components/HomeInfo";
+import Image from "next/image";
+import { soundoff, soundon } from "@/assets/icons";
+
+// Audio Setup
+const useAudio = (url) => {
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    audioRef.current = new Audio(url);
+    audioRef.current.volume = 0.4;
+    audioRef.current.loop = true;
+
+    return () => {
+      audioRef.current.pause();
+    };
+  }, [url]);
+
+  return audioRef;
+};
+
 
 const page = () => {
   const [isRotating, setIsRotating] = useState(false);
@@ -17,6 +37,17 @@ const page = () => {
   const [planeScale, setPlaneScale] = useState([2.5, 2.5, 2.5]);
   const [planePosition, setPlanePosition] = useState([0, -2, -2]);
   const [islandRotation] = useState([0.1, 4.7, 0]);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const audio = useAudio("/sakura.mp3");
+  useEffect(() => {
+    if (isPlaying) {
+      audio.current.play();
+    }
+    return () => {
+      audio.current.pause();
+    };
+  }, [isPlaying]);
 
   useEffect(() => {
     const adjustIslandSize = () => {
@@ -48,8 +79,8 @@ const page = () => {
 
   return (
     <section className="w-full h-screen relative">
-      <div className='absolute top-20 left-0 right-0 z-10 flex items-center justify-center'>
-        {currentStage && <HomeInfo currentStage={currentStage}/>}
+      <div className="absolute top-20 left-0 right-0 z-10 flex items-center justify-center">
+        {currentStage && <HomeInfo currentStage={currentStage} />}
       </div>
       <Canvas
         className={`w-full h-screen bg-transparent ${
@@ -84,6 +115,16 @@ const page = () => {
           />
         </Suspense>
       </Canvas>
+      <div className="absolute bottom-2 left-2">
+        <Image
+          src={!isPlaying ? soundoff : soundon}
+          alt="sound"
+          className="w-10 h-10 cursor-pointer object-contain"
+          onClick={() => {
+            setIsPlaying(!isPlaying);
+          }}
+        />
+      </div>
     </section>
   );
 };
