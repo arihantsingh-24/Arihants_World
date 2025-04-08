@@ -41,7 +41,7 @@ const island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
       const deltaX = (clientX - lastX.current) / (viewport.width || window.innerWidth);
       const deltaY = (clientY - lastY.current) / (viewport.width || window.innerWidth);
 
-      const sensitivity = e.touches ? 0.03 : 0.01;
+      const sensitivity = e.touches ? 0.1 : 0.01;
 
       // islandRef.current.position.z += delta * 0.005 * Math.PI;
       islandRef.current.rotation.y += deltaX * sensitivity * Math.PI;
