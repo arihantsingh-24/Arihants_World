@@ -172,14 +172,14 @@ export const projects = [
       "The Mock Interview System uses AI to generate personalized interview questions based on the user's profile and job role. A voice agent conducts the interview in real-time, simulating a realistic interview environment. It provides instant feedback and performance analysis to help users improve their interview skills.",
     link: "https://github.com/arihantsingh-24/Mock-Interview-system",
   },
-  {
-    iconUrl: snapgram,
-    theme: "btn-back-pink",
-    name: "Full Stack Instagram Clone",
-    description:
-      "Built a complete clone of Instagram, allowing users to share photos and connect with friends in a familiar social media environment.",
-    link: "https://github.com/adrianhajdin/social_media_app",
-  },
+  // {
+  //   iconUrl: snapgram,
+  //   theme: "btn-back-pink",
+  //   name: "Full Stack Instagram Clone",
+  //   description:
+  //     "Built a complete clone of Instagram, allowing users to share photos and connect with friends in a familiar social media environment.",
+  //   link: "https://github.com/adrianhajdin/social_media_app",
+  // },
   {
     iconUrl: estate,
     theme: "btn-back-black",

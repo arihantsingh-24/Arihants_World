@@ -10,7 +10,9 @@ const island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
   const { nodes, materials } = useGLTF("/3d/island.glb");
 
   const lastX = useRef(0);
+  const lastY = useRef(0);
   const rotationSpeed = useRef(0);
+  const rotationZSpeed = useRef(0);
   const dampingFactor = 0.95;
 
   const handlePointerDown = (e) => {
@@ -19,8 +21,10 @@ const island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
     setIsRotating(true);
 
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
     lastX.current = clientX;
+    lastY.current = clientY;
   };
   const handlePointerUp = (e) => {
     e.stopPropagation();
@@ -33,12 +37,20 @@ const island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
 
     if (isRotating) {
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const delta = (clientX - lastX.current) / (viewport.width || window.innerWidth);
+      const clientY = e.touches ? -1*e.touches[0].clientY : -1*e.clientY;
+      const deltaX = (clientX - lastX.current) / (viewport.width || window.innerWidth);
+      const deltaY = (clientY - lastY.current) / (viewport.width || window.innerWidth);
+
+      const sensitivity = e.touches ? 0.03 : 0.01;
 
       // islandRef.current.position.z += delta * 0.005 * Math.PI;
-      islandRef.current.rotation.y += delta * 0.01 * Math.PI;
+      islandRef.current.rotation.y += deltaX * sensitivity * Math.PI;
+      const rotationZaxis = (islandRef.current.rotation.z + deltaY * sensitivity * Math.PI *0.5);
+      islandRef.current.rotation.z = Math.max(0, Math.min(0.1, rotationZaxis));
       lastX.current = clientX;
-      rotationSpeed.current = delta * 0.01 * Math.PI;
+      lastY.current = clientY;
+      rotationSpeed.current = deltaX * 0.01 * Math.PI *0.5;
+      rotationZSpeed.current = deltaY * 0.01 * Math.PI *0.5;
     }
   };
   const handleKeydown = (e) => {
@@ -61,12 +73,19 @@ const island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
   useFrame(() => {
     if (!isRotating) {
       rotationSpeed.current *= dampingFactor;
+      rotationZSpeed.current *= dampingFactor;
 
       if (Math.abs(rotationSpeed.current) < 0.001) {
         rotationSpeed.current = 0;
       }
+      if (Math.abs(rotationZSpeed.current) < 0.001) {
+        rotationZSpeed.current = 0;
+      }
 
       islandRef.current.rotation.y += rotationSpeed.current;
+      islandRef.current.rotation.z += rotationZSpeed.current;
+
+      islandRef.current.rotation.z = Math.max(0, Math.min(0.1, islandRef.current.rotation.z));
     } else {
       const rotation = islandRef.current.rotation.y;
 
